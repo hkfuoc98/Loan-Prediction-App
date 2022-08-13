@@ -82,7 +82,7 @@ def create_model():
     df_train = processData(df_train)
 
     imputer = IterativeImputer(random_state=0)
-    imputer.fit_transform(df_train,y=None)
+    imputer.fit_transform(df_train)
 
     y_train = df_train['Loan_Status']
     x_train =  df_train.drop(['Loan_Status'], axis=1)
@@ -107,23 +107,13 @@ def load_models():
 
 def predict(X, model):
     return model.predict_proba(np.array([X]))[0]
-        
-
-
-
-
-
-
-
-
-
 
 #####################################################################################################################################################
 #                                                                                                                                                   #
 #                                                           DASHBOARD WITH STREAMLIT                                                                #
 #                                                                                                                                                   #
 #####################################################################################################################################################
-#
+
 df, _ = create_model()
 # df = pd.read_csv('data/train.csv')
 model = load_models()
@@ -133,17 +123,14 @@ x = [-1.0, 1.0, 0.0, -1, 1.0, 5849, None, None, 1.0, 1.0, 1]
 
 ##input()
 
-st.title('Loan prediction')
-
-###############
-st.write("Automation of the loan eligibility process")
-st.write("Would your loan be approved ?")
+st.title('Loan Prediction Automation')
+# st.write("Would your loan likely to be approved?")
      
 
 ### Sidebar
 df = df.dropna()
 
-st.sidebar.title('Parameters')
+st.sidebar.title('Please fill in your info')
 
 Gender = st.sidebar.radio(
     'Gender',
@@ -197,11 +184,19 @@ pred = model.predict_proba(df_x)[0]
 fig3 = px.pie(["Not accepted", "Accepted"], values=[pred[0], pred[1]],color=["Not accepted", "Accepted"],
 color_discrete_map={'Not accepted':'red', 'Accepted':'green'})
 fig3.update_layout(
-title="<b>Loan approved ?</b>")
+title="<b>Would your loan likely to be approved?</b>")
+st.text_area('Information about This Project', '''
+     Hi, I'm Phuoc; This project is part of my portfolio content on: https://phuochoang.com
+     1. Dataset: https://datahack.analyticsvidhya.com/contest/practice-problem-loan-prediction-iii/
+     2. Learning Objectives:
+      - Solve binary classification problem
+      - Build an app to automate process
+     3. About final model:
+      - Model: Logistic Regression
+      - Preprocessing: One-hot Encoding for categorical data;
+      Use KNN to fill in missing data; Select 8 best features
+     ''')
 st.plotly_chart(fig3)
 
-
-
-
-expander = st.expander("More about this project")
-expander.write("You can email me: hkfuoc98@gmail.com")
+expander = st.expander("Contact Info")
+expander.write('Email: hkfuoc98@gmail.com')
